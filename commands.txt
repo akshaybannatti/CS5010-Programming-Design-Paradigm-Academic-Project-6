@@ -1,0 +1,43 @@
+create calendar --name Work --timezone America/New_York
+create calendar --name School --timezone America/Los_Angeles
+use calendar --name Work
+
+create event "Team Sync" from 2025-01-06T10:00 to 2025-01-06T10:30
+create event "Onsite All Day" on 2025-01-07
+create event "Standup" from 2025-01-08T09:00 to 2025-01-08T09:15 repeats MTWRF for 10 times
+create event "Office Hours" from 2025-01-08T14:00 to 2025-01-08T15:00 repeats MR until 2025-02-05
+create event "Holiday" on 2025-01-20 repeats MRU for 3 times
+create event "Sprint Review" from 2025-01-10T11:00 to 2025-01-10T12:00
+
+edit event description "Sprint Review" from 2025-01-10T11:00 to 2025-01-10T12:00 with "Review goals and demos"
+edit events subject "Standup" from 2025-01-10T09:00 with "Daily Standup"
+edit series location "Office Hours" from 2025-01-08T14:00 with "Zoom"
+edit event start "Team Sync" from 2025-01-06T10:00 to 2025-01-06T10:30 with 2025-01-06T10:15
+
+print events on 2025-01-10
+print events from 2025-01-08T00:00 to 2025-01-15T23:59
+show status on 2025-01-10T11:30
+export cal work_jan.csv
+export cal work_jan.ical
+
+copy event "Sprint Review" on 2025-01-10T11:00 --target School to 2025-01-10T10:00
+copy events on 2025-01-10 --target School to 2025-01-10
+copy events between 2025-01-08 and 2025-01-20 --target School to 2025-01-13
+
+use calendar --name School
+print events on 2025-01-10
+edit calendar --name School --property name Courses
+use calendar --name Courses
+edit calendar --name Courses --property timezone America/Chicago
+print events from 2025-01-10T00:00 to 2025-01-20T23:59
+use calendar --name Work
+
+create event "Quarterly Planning" from 2025-03-03T13:00 to 2025-03-03T15:00
+edit events start "Daily Standup" from 2025-01-13T09:00 with 2025-01-13T09:15
+edit series subject "Office Hours" from 2025-01-08T14:00 with "CS 5010 Office Hours"
+create event "Project Kickoff Day" on 2025-03-04 repeats TR until 2025-03-20
+create event "Company Retreat" on 2025-04-01 repeats FSU for 3 times
+
+show status on 2025-01-13T09:10
+export cal all_work.ics
+exit

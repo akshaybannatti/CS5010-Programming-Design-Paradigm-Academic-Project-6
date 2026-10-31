@@ -1,0 +1,90 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'checkstyle'
+    id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.15.0'
+}
+
+group 'calendar'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.testng:testng:7.1.0'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'CalendarRunner'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.required = true
+        xml.required = false
+        csv.required = true
+    }
+}
+
+test {
+    useJUnit()
+    finalizedBy tasks.jacocoTestReport
+    ignoreFailures = true
+}
+
+application {
+    mainClass = 'CalendarRunner'
+}
+
+checkstyle {
+    toolVersion = '10.23.1'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    //maxWarnings = 0//
+    ignoreFailures = true
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+pitest {
+    targetClasses = ['calendar.*']
+    targetTests = ['*']
+    pitestVersion = '1.15.8'
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+    testPlugin = 'junit'
+    verbose = true
+    exportLineCoverage = true
+    failWhenNoMutations = false
+}
+
+tasks.named('run', JavaExec) {
+    standardInput = System.in
+}
